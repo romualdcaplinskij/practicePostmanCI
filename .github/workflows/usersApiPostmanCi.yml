@@ -2,6 +2,9 @@ name: Automated API tests using Postman CI
 
 on: push
 
+env:
+  POSTMAN_API_KEY: ${{ secrets.POSTMAN_API_KEY }}
+
 jobs:
   automated-api-tests:
     strategy:
@@ -22,12 +25,12 @@ jobs:
         run: |
           curl -X GET "https://api.getpostman.com/collections/36312693-8f36f7b5-6476-4001-a810-d2aa1876e2fc" \
             -H "X-Api-Key: ${POSTMAN_API_KEY}" > collection.json
-          shell: bash
+        shell: bash
       - name: Fetch Postman environment
         run: |
           curl -X GET "https://api.getpostman.com/environments/36312693-d17650e1-177d-46a9-b7d7-26150394d5de" \
             -H "X-Api-Key: ${POSTMAN_API_KEY}" > environment.json
-          shell: bash
+        shell: bash
       - name: Run API test
         run: |
           newman run collection.json -e environment.json --reporters cli,htmlextra --reporter-htmlextra-export report-${{ matrix.os }}.html
