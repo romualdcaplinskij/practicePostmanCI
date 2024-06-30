@@ -30,10 +30,10 @@ jobs:
         run: |
           curl -X GET "https://api.getpostman.com/environments/36312693-d17650e1-177d-46a9-b7d7-26150394d5de" \
             -H "X-Api-Key: ${POSTMAN_API_KEY}" > environment.json
-            --global-var "BASE_URI=https://exampleusingdb-4.onrender.com/api/v1/library/users"
         shell: bash
       - name: Run API test
         run: |
+          --global-var "BASE_URI=https://exampleusingdb-4.onrender.com/api/v1/library/users"
           newman run collection.json -e environment.json --reporters cli,htmlextra --reporter-htmlextra-export report-${{ matrix.os }}.html
       - name: Upload report
         uses: actions/upload-artifact@v4
