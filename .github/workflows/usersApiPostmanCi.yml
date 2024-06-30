@@ -1,0 +1,31 @@
+name: Automated API tests using Postman CI
+
+on: push
+
+jobs:
+  automated-api-tests:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Use Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20.x'
+      - name: Install Newman
+        run: |
+          npm install -g newman
+      - name: Fetch Postman collection
+        run: |
+          part1="PMAK-66741d42074366000122"
+          part2="b1ed-69542ade8bed106d736758f4f62f6b82b4"
+          curl -X GET "https://api.getpostman.com/collections/36312693-8f36f7b5-6476-4001-a810-d2aa1876e2fc" \
+            -H "X-Api-Key: $part1$part2" > collection.json
+      - name: Fetch Postman environment
+        run: |
+          part1="PMAK-66741d42074366000122"
+          part2="b1ed-69542ade8bed106d736758f4f62f6b82b4"
+          curl -X GET "https://api.getpostman.com/environments/36312693-d17650e1-177d-46a9-b7d7-26150394d5de" \
+            -H "X-Api-Key: $part1$part2" > environment.json 
+      - name: Run API test
+        run: |
+          newman run collection.json -e environment.json
