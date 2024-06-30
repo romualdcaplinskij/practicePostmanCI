@@ -31,6 +31,10 @@ jobs:
           curl -X GET "https://api.getpostman.com/environments/36312693-d17650e1-177d-46a9-b7d7-26150394d5de" \
             -H "X-Api-Key: ${POSTMAN_API_KEY}" > environment.json
         shell: bash
+      - name: Print environment variables
+        run: |
+          echo "BASE_URI=${{ secrets.BASE_URI }}"
+          echo "userId=${{ secrets.userId }}"
       - name: Run API test
         run: |
           newman run collection.json -e environment.json --reporters cli,htmlextra --reporter-htmlextra-export report-${{ matrix.os }}.html
